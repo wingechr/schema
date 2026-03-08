@@ -1,4 +1,3 @@
-import argparse
 import json
 from pathlib import Path
 from typing import Callable
@@ -80,37 +79,8 @@ class MetadataConverterGraph:
 
         return converter
 
-
-def convert_metadata(metadata: dict, version_to: str) -> dict:
-    """convert metadata to version_to."""
-    version_from = metadata["$schema"]
-    converter_graph = MetadataConverterGraph()
-    converter = converter_graph.get_converter(version_from, version_to)
-    return converter(metadata)
-
-
-def convert_metadata_inplace(metadata_filepath: str | Path, version_to: str) -> None:
-    """convert metadata in place."""
-    metadata_filepath = Path(metadata_filepath)
-    with metadata_filepath.open("r") as f:
-        metadata = json.load(f)
-
-    converted_metadata = convert_metadata(metadata, version_to=version_to)
-
-    with metadata_filepath.open("w") as f:
-        json.dump(converted_metadata, f, indent=2)
-
-
-if __name__ == "__main__":
-    ap = argparse.ArgumentParser()
-    ap.add_argument(
-        "metadata_filepath", type=str, help="path to the metadata file to convert"
-    )
-    ap.add_argument(
-        "version_to", type=str, help="the version to convert the metadata to"
-    )
-
-    # parse args
-    kwargs = vars(ap.parse_args())
-
-    convert_metadata_inplace(**kwargs)
+    def convert_metadata(self, metadata: dict, version_to: str) -> dict:
+        """convert metadata to version_to."""
+        version_from = metadata["$schema"]
+        converter = self.get_converter(version_from, version_to)
+        return converter(metadata)
