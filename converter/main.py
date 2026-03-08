@@ -5,6 +5,7 @@ from typing import Callable
 
 import networkx as nx
 
+# load base schema id
 with (Path(__file__).parent.parent / "schema" / "base.schema.json").open("rb") as f:
     schema_base_id = json.load(f)["$id"]
 
@@ -12,8 +13,8 @@ with (Path(__file__).parent.parent / "schema" / "base.schema.json").open("rb") a
 class MetadataConverter:
     """import subclasses of this class to register them in the converter graph."""
 
-    version_from = schema_base_id
-    version_to = schema_base_id
+    version_from: str = schema_base_id
+    version_to: str = schema_base_id
 
     def __call__(self, metadata) -> dict:
         """convert metadata from version_from to version_to."""
@@ -25,6 +26,7 @@ class MetadataConverterGraph:
     def get_all_subclasses(cls) -> set[type[MetadataConverter]]:
         """get all subclasses of this class."""
         subclasses = set()
+        subclasses.add(MetadataConverter)
         work = [MetadataConverter]
         while work:
             parent = work.pop()
@@ -62,6 +64,8 @@ class MetadataConverterGraph:
             ]
         except nx.NetworkXNoPath:
             raise ValueError(f"No converter path from {version_from} to {version_to}")
+        # except nx.NodeNotFound:
+        #    raise
 
     def get_converter(
         self, version_from: str, version_to: str
