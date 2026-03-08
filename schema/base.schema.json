@@ -1,12 +1,12 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema",
-  "$id": "https://purl.org/dat/schema/metadata-0.0.0.schema.json",
+  "$id": "https://purl.org/dat/schema/base.schema.json",
   "type": "object",
   "properties": {
     "$schema": {
       "type": "string",
       "format": "uri",
-      "const": "https://purl.org/dat/schema/metadata-0.0.0.schema.json"
+      "const": "https://purl.org/dat/schema/base.schema.json"
     },
     "@id": {
       "type": "string",
